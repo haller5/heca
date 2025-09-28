@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>The Continental Review — Index</title>
+  <meta name="description" content="A landing page that doubles as a typographic index, in a mineral‑toned broadsheet style." />
+  <style>
+    :root {
+      --bg: #181818;
+      --ink: #ECEAE5;         /* primary reading text */
+      --muted: #B5B5B5;       /* secondary grayscale */
+      --rule: #3A3A3A;        /* hairlines */
+      --accent: #526C8E;      /* aged indigo: headings/links */
+      --secondary: #8C735A;   /* faded bronze: descriptions/bylines */
+      --timeline: #5C6E66;    /* ash‑green: nav/buttons/timeline */
+
+      --font-serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+      --font-sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+
+      --lh: 1.7;
+      --gutter: clamp(16px, 2.5vw, 28px);
+      --max: 1200px;
+    }
+
+    * { box-sizing: border-box; }
+    body { margin:0; background: var(--bg); color: var(--ink); font-family: var(--font-serif); line-height: var(--lh); text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+
+    a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+    a:hover { text-decoration-thickness: 2px; }
+
+    /* Shell with vertical rail like the article template */
+    .shell { display: grid; grid-template-columns: 84px 1fr; min-height: 100dvh; }
+
+    .rail {
+      border-right: 1px solid var(--rule);
+      display: grid; grid-template-rows: auto 1fr auto; align-items: start;
+      position: sticky; top: 0; height: 100dvh; background: linear-gradient(#202020, transparent);
+    }
+    .brand { writing-mode: vertical-rl; text-orientation: mixed; transform: rotate(180deg); letter-spacing: .08em; font-variant-caps: all-small-caps; font-weight: 700; font-size: clamp(.95rem, 2.3vw, 1.15rem); padding: var(--gutter) .5rem; text-align: center; color: var(--accent); }
+    .vnav { writing-mode: vertical-rl; text-orientation: mixed; transform: rotate(180deg); display:flex; gap:1.1rem; padding:.75rem .5rem; align-items:center; justify-content:center; border-top:1px solid var(--rule); border-bottom:1px solid var(--rule); }
+    .vnav a { color: var(--timeline); text-decoration: none; font-family: var(--font-sans); font-variant-caps: all-small-caps; letter-spacing:.08em; font-size:.86rem; }
+    .vnav a:hover { color: var(--accent); text-decoration: underline; }
+    .folio-no { writing-mode: vertical-rl; transform: rotate(180deg); color: var(--secondary); font-family: var(--font-sans); font-size:.8rem; padding:.75rem .5rem var(--gutter); border-top:1px solid var(--rule); }
+
+    /* Header band */
+    .head { border-bottom:1px solid var(--rule); padding:.5rem var(--gutter); display:flex; align-items:center; gap:.8rem; position: sticky; top:0; background: var(--bg); z-index:5; }
+    .dateline { font-variant-caps: all-small-caps; letter-spacing:.08em; color: var(--secondary); font-family: var(--font-sans); font-size:.82rem; }
+    .section-kicker { color: var(--accent); font-family: var(--font-sans); font-variant-caps: all-small-caps; letter-spacing:.08em; margin-left:auto; }
+
+    main { padding: var(--gutter); }
+    .container { max-width: var(--max); margin-inline: auto; display:grid; grid-template-columns: 2.2fr 1fr; gap: clamp(18px, 3vw, 28px); }
+
+    /* Index list (acts like the landing content) */
+    .indexlist { display:grid; gap: clamp(14px, 2.2vw, 22px); }
+    .item { border:1px solid var(--rule); background: linear-gradient(#1d1d1d, #181818); padding: clamp(14px, 2vw, 20px); display:grid; gap:.35rem; }
+    .item .kicker { font-variant-caps: all-small-caps; letter-spacing:.08em; color: var(--accent); font-family: var(--font-sans); font-size:.9rem; }
+    .item h2 { margin:.1rem 0 .2rem; font-size: clamp(1.1rem, 2vw, 1.4rem); line-height:1.15; color: var(--accent); }
+    .item .dek { color: var(--secondary); font-family: var(--font-sans); }
+    .meta { color: var(--secondary); font-family: var(--font-sans); font-size:.85rem; }
+
+    /* Filter/Search (optional, minimalist) */
+    .controls { display:flex; gap:.6rem; align-items:center; border:1px solid var(--rule); background: linear-gradient(#1b1b1b, #181818); padding: .6rem .7rem; margin-bottom: .8rem; }
+    .controls input[type="search"] { flex:1; background: transparent; color: var(--ink); border: none; outline: none; font: inherit; }
+    .controls button { font-family: var(--font-sans); padding:.45rem .8rem; border:1px solid var(--rule); background: var(--timeline); color: var(--bg); cursor: pointer; }
+    .controls button:hover { filter: contrast(1.05) brightness(1.02); }
+
+    /* Right column: Recent marginalia extract + subtle timeline */
+    .aside { border:1px solid var(--rule); background: linear-gradient(#1b1b1b, #181818); padding: clamp(12px, 1.6vw, 16px); display:grid; gap:.8rem; align-content:start; }
+    .aside h3 { margin:0; font-size: 1rem; color: var(--accent); }
+    .marginalia { display:grid; gap:.6rem; }
+    .note { color: var(--muted); font-size:.92rem; }
+    .timecol { border-left:1px solid var(--secondary); padding-left:.7rem; display:grid; gap:.7rem; }
+    .t { position:relative; }
+    .t::before { content:""; position:absolute; left:-.95rem; top:.35rem; width:10px; height:10px; border-radius:50%; background: var(--timeline); }
+
+    /* Footer */
+    footer { border-top:1px solid var(--rule); color: var(--secondary); font-family: var(--font-sans); padding: .9rem var(--gutter); margin-top: var(--gutter); }
+
+    /* Mobile */
+    @media (max-width: 900px) {
+      .shell { grid-template-columns: 1fr; }
+      .rail { position: static; height: auto; }
+      .brand, .vnav, .folio-no { writing-mode: horizontal-tb; transform:none; display:flex; gap:.9rem; justify-content:center; }
+      .vnav { flex-wrap: wrap; }
+      .container { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside class="rail">
+      <div class="brand">Continental's Haller5</div>
+      <nav class="vnav">
+        <a href="index.html">Index</a>
+        <a href="essay.html">Letters</a>
+        <a href="archive.html">Further Reading</a>
+        <a href="about.html">About</a>
+      </nav>
+      <div class="folio-no">No. 01 • Sept 27, 2025</div>
+    </aside>
+
+    <div>
+      <header class="head">
+        <div class="dateline">Autumn 2025's Folio</div>
+        <div class="section-kicker">Index Edition</div>
+      </header>
+
+      <main>
+        <div class="container">
+          <section>
+            <div class="controls" role="search">
+              <input type="search" placeholder="Search titles, sections, or dates" aria-label="Search index" oninput="filterIndex(event)">
+            </div>
+
+            <div class="indexlist" id="indexlist">
+              <!-- Each item represents an essay; no oversized hero -->
+              <article class="item" data-tags="philosophy politics">
+                <div class="kicker">Essay</div>
+                <h2><a href="hegel11.html">Interpreting Hegel and the Right Wing</a></h2>
+                <p class="dek">Hegel's subtler and more complex relationship with the late 19th and early 20th century right wing movements.</p>
+                <div class="meta">Spring 2025 • May 31</div>
+              </article>
+
+              <!-- Add more items as you publish -->
+            </div>
+          </section>
+
+          <!-- Recent marginalia extract that ties the home to the footnote ethos -->
+          <aside class="aside">
+            <h3>Marginalia</h3>
+            <div class="marginalia">
+              <div class="note"></div>
+              <div class="note"></div>
+              <div class="note"></div>
+            </div>
+            <h3></h3>
+            <div class="timecol">
+            </div>
+          </aside>
+        </div>
+      </main>
+
+      <footer>Autumn's 2025, and Continental's Haller5.</footer>
+    </div>
+  </div>
+
+  <script>
+    function filterIndex(e){
+      const q = e.target.value.toLowerCase();
+      const items = document.querySelectorAll('#indexlist .item');
+      for (const it of items){
+        const text = it.innerText.toLowerCase() + ' ' + (it.dataset.tags||'');
+        it.style.display = text.includes(q) ? '' : 'none';
+      }
+    }
+    function clearFilter(){
+      const input = document.querySelector('[type="search"]');
+      input.value = '';
+      const items = document.querySelectorAll('#indexlist .item');
+      for (const it of items){ it.style.display = ''; }
+      input.focus();
+    }
+  </script>
+</body>
+</html>

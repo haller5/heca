@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>The Continental Review — Lateral Broadsheet</title>
+  <meta name="description" content="A lateral broadsheet layout with marginalia as footnotes and a quiet‑data timeline in a mineral‑toned dark palette." />
+  <style>
+    :root {
+      --bg: #181818;
+      --ink: #ECEAE5;         /* primary reading text */
+      --muted: #B5B5B5;       /* secondary grayscale */
+      --rule: #3A3A3A;        /* hairlines */
+      --accent: #526C8E;      /* aged indigo: headings/links */
+      --secondary: #8C735A;   /* faded bronze: descriptions/bylines */
+      --timeline: #5C6E66;    /* ash‑green: nav/wbuttons/timeline */
+
+      --font-serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+      --font-sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+
+      --lh: 1.7;
+      --gutter: clamp(16px, 2.5vw, 28px);
+      --folio: clamp(580px, 60vw, 760px);
+      --narrow-folio: clamp(400px, 42vw, 520px);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin:0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font-serif);
+      line-height: var(--lh);
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden; /* guard against stray horizontal scroll on mobile */
+    }
+
+    /* Links & interactive accents */
+    a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+    a:hover { text-decoration-thickness: 2px; }
+
+    /* Layout */
+    .shell { display: grid; grid-template-columns: 84px 1fr; min-height: 100dvh; }
+
+    .rail {
+      border-right: 1px solid var(--rule);
+      display: grid; grid-template-rows: auto 1fr auto; align-items: start;
+      position: sticky; top: 0; height: 100dvh;
+      background: linear-gradient(#202020, transparent);
+    }
+    .brand {
+      writing-mode: vertical-rl; text-orientation: mixed; transform: rotate(180deg);
+      letter-spacing: .08em; font-variant-caps: all-small-caps; font-weight: 700;
+      font-size: clamp(.95rem, 2.3vw, 1.15rem);
+      padding: var(--gutter) .5rem; text-align: center; color: var(--accent);
+    }
+    .vnav { writing-mode: vertical-rl; text-orientation: mixed; transform: rotate(180deg);
+      display:flex; gap:1.1rem; padding:.75rem .5rem; align-items:center; justify-content:center;
+      border-top:1px solid var(--rule); border-bottom:1px solid var(--rule); }
+    .vnav a { color: var(--timeline); text-decoration: none; font-family: var(--font-sans);
+      font-variant-caps: all-small-caps; letter-spacing:.08em; font-size:.86rem; }
+    .vnav a:hover { color: var(--accent); text-decoration: underline; }
+    .folio-no { writing-mode: vertical-rl; transform: rotate(180deg); color: var(--secondary);
+      font-family: var(--font-sans); font-size:.8rem; padding:.75rem .5rem var(--gutter); border-top:1px solid var(--rule); }
+
+    .head { border-bottom:1px solid var(--rule); padding:.5rem var(--gutter); display:flex; align-items:center; gap:.8rem;
+      position: sticky; top:0; background: var(--bg); z-index:5; }
+    .dateline { font-variant-caps: all-small-caps; letter-spacing:.08em; color: var(--secondary);
+      font-family: var(--font-sans); font-size:.82rem; }
+    .section-kicker { color: var(--accent); font-family: var(--font-sans); font-variant-caps: all-small-caps; letter-spacing:.08em; margin-left:auto; }
+
+    .lateral { display:grid; grid-auto-flow: column; grid-auto-columns: var(--folio); gap: var(--gutter);
+      padding: var(--gutter); overflow-x:auto; overflow-y:hidden; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
+    .folio { border:1px solid var(--rule); padding: clamp(16px, 2vw, 22px);
+      display:grid; grid-template-rows:auto 1fr auto; gap:.75rem; background: linear-gradient(#1d1d1d, #181818); scroll-snap-align:start; }
+    .narrow { grid-auto-columns: var(--narrow-folio); }
+
+    /* Palette-aware typography */
+    .kicker { font-variant-caps: all-small-caps; letter-spacing:.08em; color: var(--accent); font-family: var(--font-sans); font-size:.92rem; }
+    h1, h2, h3 { margin:.1rem 0 .35rem; line-height:1.12; text-wrap: balance; color: var(--accent); }
+    h1 { font-size: clamp(1.6rem, 3.6vw, 2.6rem); }
+    h2 { font-size: clamp(1.25rem, 2.2vw, 1.55rem); }
+    .dek, .byline, .caption { color: var(--secondary); font-family: var(--font-sans); }
+    .dek { max-width: 60ch; }
+
+    /* Reading text remains high-contrast */
+    .prose { column-width: 33ch; column-gap: 2.2rem; column-rule: 1px solid var(--rule); max-width: 100%; color: var(--ink); }
+    .prose p { margin: 0 0 1.05em; }
+    .prose p:first-of-type::first-letter { float:left; font-size:3.2rem; line-height:.85; padding-right:.18rem; padding-top:.2rem; font-weight:600; color: var(--ink); }
+    .pull { break-inside: avoid; border-left:3px solid var(--rule); padding:.6rem .9rem; font-style:italic; color: var(--muted); margin:.8rem 0; }
+
+    .media { aspect-ratio: 16/9; border:1px solid var(--rule); display:grid; place-items:center; margin:.6rem 0; }
+    .media svg { width:26%; opacity:.5; }
+
+    /* Marginalia as footnotes with quiet data timeline */
+    .marginalia { display:grid; grid-template-columns:32px 1fr; gap:1rem; }
+    .timeline-spine { border-left:1px solid var(--secondary); display:grid; align-content:start; padding-top:.5rem; gap:1.2rem; }
+    .timeline-spine div { width:12px; height:12px; border-radius:50%; background: var(--timeline); margin-left:-6px; cursor:pointer; position:relative; }
+    .timeline-spine div:hover::after { content: attr(data-note); position:absolute; left:18px; top:0; background:#202020; color: var(--ink); font-size:.8rem; padding:.3rem .5rem; border:1px solid var(--rule); white-space:nowrap; }
+
+    .footnotes { display:grid; gap:.7rem; font-size:.95rem; color: var(--ink); }
+    .footnotes p { margin:0; }
+    .footnotes p::before { content: counter(fn) ". "; counter-increment: fn; color: var(--secondary); font-feature-settings: "lnum" 1; }
+    .footnotes { counter-reset: fn; }
+
+    .references { border-top:1px solid var(--rule); margin-top:1rem; padding-top:1rem; font-size:.9rem; color: var(--muted); display:grid; gap:.7rem; }
+    .references blockquote { margin:0; font-style:italic; color: var(--ink); border-left:3px solid var(--secondary); padding-left:.7rem; }
+
+    .foot { border-top:1px solid var(--rule); padding:.9rem var(--gutter); color: var(--secondary); font-family: var(--font-sans); }
+
+    /* Mobile refinement */
+    @media (max-width: 900px) {
+      .shell { grid-template-columns: 1fr; }
+      .rail { position: static; height: auto; }
+      .brand, .vnav, .folio-no { writing-mode: horizontal-tb; transform:none; display:flex; gap:.9rem; justify-content:center; }
+      .vnav { flex-wrap: wrap; }
+      .lateral { display:grid; grid-auto-flow: row; grid-auto-rows:auto; overflow: visible; padding: clamp(12px, 4vw, 20px); gap: clamp(12px, 3.5vw, 18px); }
+      .folio { scroll-snap-align: unset; padding: clamp(14px, 3.5vw, 20px); }
+      h1 { font-size: clamp(1.35rem, 6vw, 2rem); }
+      h2 { font-size: clamp(1.1rem, 4.8vw, 1.4rem); }
+      .prose { column-width: auto; column-count: 1; column-rule: none; }
+      .marginalia { grid-template-columns: 1fr; }
+      .timeline-spine { display: none; } /* optional; keeps mobile clean */
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside class="rail">
+      <div class="brand">continental's Haller5</div>
+      <nav class="vnav">
+                  <a href="index1.html">Index</a>
+        <a href="essay.html">Letters</a>
+        <a href="archive.html">Further Reading</a>
+        <a href="about.html">About</a>
+        <a href="#"></a>
+        <a href="#"></a>
+        <a href="#"></a>
+        <a href="#"></a>
+      </nav>
+      <div class="folio-no">No. 01 • Sept 27, 2025</div>
+    </aside>
+
+    <div>
+      <header class="head">
+        <div class="dateline">Autumn 2025's FOLIO</div>
+        <div class="section-kicker">Marginalia Edition</div>
+      </header>
+
+      <section class="lateral">
+        <!-- Lead essay -->
+        <article class="folio">
+          <div>
+            <div class="kicker">Essay • Philosophy • Politics</div>
+            <h1>Interpreting Hegel and the Right Wing</h1>
+            <p class="dek">Hegel's tradition is closely linked to the Young Hegelians and, namely, Marx. Though, without surprise, Hegel has a subtler and more complex relationship with the late 19th and early 20th century right wing movements and romantic nationalism.</p>
+            <p class="byline">By <strong>Haller Freight</strong> • Haller5</p>
+            <figure class="media">
+              <svg viewBox="0 0 100 60" role="img" aria-labelledby="phA"><title id="phA">Lead image</title><rect x="1" y="1" width="98" height="58" fill="none" stroke="currentColor" stroke-width=".6" opacity=".35"/><path d="M3 42 L28 22 L53 34 L74 20 L97 42" fill="none" stroke="currentColor" stroke-width=".6" opacity=".35"/></svg>
+            </figure>
+          </div>
+          <div class="prose">
+            <p>Hegel, among many accomplishments, is largely more obscured by
+his successors in the wake of modern political philosophy of the 19th
+century. It is not that he lacked any major framework, he certainly laid a
+great foundation, but— if his name be mentioned at all in Politics— it is
+beside the twentieth century giant which is Marx— or more broadly, the
+Young Hegelians. (I won’t go any further on the Young Hegelians, other
+than to lightly motion at them as the primary political marker on history
+that we may think of if we ever pair <i>Hegel</i> and <i>Politics</i> in common
+discourse).</p>
+            <p>So, if Marx turned Hegel’s dialectic “right side up,” it really <i>begs</i> the question of how Hegel was handled by the Right Wing— that is, the other end of the spectrum to Marx. Reasonably enough, we must first begin with understanding what the <i>Left</i> and <i>Right</i> wing even are, for if we simply throw these terms around without understanding them, we will really get nowhere. The Left wing is easy enough to define for our purposes, as we will generally line it up with the revolutionary fervour of the French Revolution, a tossing aside of the order of things. It is essential to the left wing that class distinctions be tossed out— in other words, capitalism— just as the French had properly disposed of feudalism. In fact, the seedlings of anarchist and socialist thought were beginning to <i>form</i> here. If this was the Left wing, then, we can see the Right Wing as the reactionary, those who sought to try to maintain an old order of things. However, as time went on, the Right took on a more <i>quasi-revolutionary</i> nature— which, as we will see, are borrowed from Hegel’s historicism of dynamism— as it heralded ideas previously known within the Left Wing, like nationalism and the like, which will be central to our genealogy. It is here where we land at a very, extremely broad outline of the two ends. 
+</p>
+<p>So if Hegel was, as we know, a man who had a nuanced relationship with the French revolutionary fervour, praising its heralding of reason and the seeing it as larger revealing of the <i>Idea</i> which, similar to Marx’s teleology of <i>communism</i>, was central to his ideas of his Reason, then <i>how</i> was he in any way appealing to the reactionary, and somewhat anti-Revolutionary philosopher? For this, we begin with Taine.
+</p>
+<p>Taine, for all his greatness, had one primary motivating flaw which contributed to his later obscurity. From Taine we can see the earliest major forms of modern anti French Revolutionary thought— in <i>The French Right</i>, J.S. McClelland introduces Taine briefly, 
+</p>
+            <blockquote class="pull">“Taine is on the edge. He is an irrationalist, but not an anti-rationalist. He recognizes the value of reason, but also sees its limitations.” (p. 23). McClelland, J. S., and John Frears. The French Right: (From De Maistre to Maurras). Cape, 1970.</blockquote>
+            <p>Now, hold onto this little epitaph of sorts, as we turn to Hegel. Hegel, veered from the sense of reason and man found in the Revolution. He focused heavily on history— broadly, he considered all human activity to be the sum of history, or defined by their history. As such, to understand the character of an epoch, a people, you must understand and acknowledge its history. This is the first break from the French Left radicalist view of people as a sum of their interactions— the  famous <i>tabula rasa</i>. In this manner, Hegel had already begun a theory of societies which was based on its history, rejecting an idea of a <i>blank slate</i> individualistic, or atomistic theory of person. To Hegel, his Reason was something grasped by a continuation of history and becoming, not by individuals. The primary point of his philosophy of history was, however, its tendency toward a teleology based upon the <i>Geist</i>, which guided toward a process of the <i>Idea</i> (his Reason) revealing itself through the process. To Hegel, the guiding force— <i>Geist</i>— served to move the revelation of the <i>Idea</i>— through the becoming. 
+</p>
+<p>In Hegel’s Lectures on the Philosophy of History, delivered in the University of Berlin, he said, 
+</p>
+<blockquote class="pull">“[it is] our belief, that Reason governs the world, and has consequently governed its history.” (Introduction, Section III Philosophical History, p. 26) Hegel, Georg Wilhelm Friedrich, 1770-1831, and John Sibree. Lectures On the Philosophy of History. London: G. Bell and sons, 1881.</blockquote>
+<p>Thus, we turn back to Taine and his hostility toward rationality. Taine’s hostility toward reason drew him to a distinction of two <i>reasons</i>, which he called the <i>raison raisonnante</i> and the <i>raison qui s’ignore</i>. The first reason is our most familiar <i>reason</i>, that which operates according to logic and seeks to be as refined as mathematical models. The second, however, is not reason at all in the way we understand— McClelland again offers us a valuable insight into its nature, 
+</p>
+<blockquote class="pull">“The raison qui s’ignore is not reason at all in the first sense, at least not in Taine or Burke. It refers to wisdom, the accumulated wisdom of the ages which is slowly deposited in institutions. The philosopher has access to it, but the method of access differs from the method used in the first kind of reasoning in that it does not involve deduction from premises but an empathetic research into history, geography, literature and myth. The forces with which the philosopher may have to deal if he is to find out what it is may be unconscious.” (p. 23). McClelland, J. S., and John Frears. The French Right: (From De Maistre to Maurras). Cape, 1970.</blockquote>
+<p>This bears a striking resemblance to our Hegelian philosophy of history, his <i>raison qui s’ignore</i> appears to be quite similar to Hegel’s understanding of the <i>Idea</i>. Taine’s relationship to Hegel is of no surprise, as he, very early on, showed an attraction toward Hegel’s metaphysics. He only disdained its approach to rationalism. 
+</p>
+<p>In Maurice Barres’ novel <i>Les Deracines</i>, a major theme permeates the entirety— to Barres, there is no self-deduced system of relationships like morality or the State or society. There is no conscious rationality which arrives at these, like Taine’s <i>raison raisonnante</i>. To Barres, such is absurd. For him, these are the result of a certain kind of determinism which he labels <i>nationalism</i>. And to him, nationalism is the <i>raison qui s’ignore</i>. Or, more precisely, the myth of nationalism, which I’ll return to. Barres’ determinism, guided by his formulation of the raison qui s’ignore, arrives at how the history of a nation informs its present circumstances. Barres then gives us the very radical notion that all systems can be only properly found in the history of a people, and not be self-deduced through some logic or rationality, as the French revolutionaries attempted, when they organised the State and society. 
+</p>
+<p>Back to understanding this new conception of the <i>Idea</i>, and the <i>Geist</i>, and such, we ask what exactly <i>is it</i>, in this new framework, with and to what does it lead if not Hegel’s <i>Idea</i>, in its precise sense? We return to Marx; I made the rather controversial connection that Marx’s assertion that communism is a logical unfolding of the contradictions of capitalism— and thus that the contradictions of capitalism are explained through their roles in the advent of communism— and is a teleology similar to that of Hegel’s <i>Geist</i>. Though admittedly dubious, in <i>Marx and Teleology</i> by Sean Sayer, he notes, 
+</p>
+<blockquote class="pull">“According to Althusser, these Hegelian formulae [present in the Grundrisse Notebook I, page 158, Marx, Karl. Grundrisse: Foundations of the Critique of Political Economy. Penguin Books, 1973.] and Marx’s humanism are unavoidably teleological. They are cases of what Althusser calls the philosophy of “origin and end,” for they presume the notion of a “subject” present at the outset and continuing through- out, which embodies the end. The process of development is then the realization of an end that has been operative in the subject from the beginning.” (p. 46) Sayers, Sean. “Marx and teleology.” Science & Society: A Journal of Marxist Thought and Analysis, vol. 83, no. 1, Jan. 2019, pp. 37–63, https://doi.org/10.1521/siso.2019.83.1.37.</blockquote>
+<p>The purpose of this comparison is that it’ll explain how Sorel, by reorienting this notion of the “subject”, was driven to his <i>myth</i>. Sorel, a marxist, or at least intimately aligned with Marxism, felt that the <i>myth</i> was the force which drove history forward while itself being revealed in the process of history.
+</p>
+<blockquote class="pull">“Sorel is specific in his advocacy of myth, but in Maurras and Barrés there is an implied use of myth. For Barrés, the real France of the provincial graveyards is a mythology; it may not have existed in the past, but it points the way to action in the present.” (p. 33) McClelland, J. S., and John Frears. The French Right: (From De Maistre to Maurras). Cape, 1970. 
+</blockquote>
+<p>In this way, Hegel’s conception of societies as entities which were defined by their histories, larger than the individual interactions which made it up, and partook in a teleological relationship with some metaphysical <i>Geist</i> and the <i>Idea</i>, was foundational in the romantic nationalism of the Action Française and broader Far Right thinking.
+</p>
+<p>Barres, in his work <i>De Hegel aux cantines du Nord</i>, in Chapter One, offers a pretty succinct and strong support for a genealogy of Hegel in this regard,
+</p>
+<blockquote class="pull">“It is well known that according to Hegel’s admirable dialectic, the Idea cannot be manifested in a particular fact or individual. The Idea is immanent only in a succession of phenomena moving towards the infinite… we now know how to follow the historical development of the nations; we now understand what has gone before; and more, we respect that development… and that the truth of a thing consists in its place in the total scheme of things.” (p. 22) Barrès, Maurice. De Hegel Aux Cantines Du Nord. E. Sansot et Cie , 1904.</blockquote>
+<p>For Barres, who we will label a proto-fascist, he is that primary fountain of intellect for which the fascist gets his intoxicated romantic sense of nationalism, and this revolutionary <i>Idea</i> of the <i>Nation</i>— which truly is mere myth, it does not matter if such a France or  Germany ever existed, only that it exists in myth and in the people. You’ll hear fascists and fascist rhetoric follow with an idea of “revitalising the Nation.” Usually it comes with a deeply nostalgic sense for that old, ancient Great Nation. Such a thing does not exist, but is what guides forth. Such ideas of palingenesis are very well documented by historians of fascism; Barres writes for us in his <i>Scenes et Doctrines du Nationalisme</i>, connecting his <i>Nation</i> to the <i>Idea</i>, 
+</p>
+<blockquote class="pull">“Our thoughts are not the products of our own individual intelligence; they are the physiological translations of primeval physiological dispositions.” (p. 17) Barrès, Maurice, 1862-1923. Scènes Et Doctrines Du Nationalisme. Paris: Émile-Paul, 1902. </blockquote>
+<p>By this he means that the thoughts of the nation are themselves— through the process of history— the primeval <i>Nation</i> revealing itself in history, in the creation of the <i>Nation</i>, in the creation of the people. The truth of Nation consists in its place in the total scheme of the development of the <i>Nation</i>. Immanent in the succession of history, and informing its development. Again, the <i>Nation</i> is the <i>Idea</i>, and its <i>Geist</i>, its consciousness and force.
+</p>
+<p>Integral to the Right Wing was the preservation of the <i>Nation</i>, which, in practicality, was the status quo, or what it was <i>mythicised</i> to be. Hegel’s preface to the Philosophy of the Right was integral in the rationale:
+</p>
+<blockquote class="pull">“What is rational is real;
+And what is real is rational.” (p. xxvii) 
+Hegel, Georg Wilhelm Friedrich, 1770-1831, and Samuel Walters Dyde. Hegel's Philosophy of Right. London: G. Bell and sons, 1896. 
+</blockquote>
+<p>This is expressed in subtlety by Barres’ notion of the <i>raison qui s’ignore</i> in the <i>real</i> ancestors, the dead.
+</p>
+<blockquote class="pull">“After the long, hard work of foraging, after a subtle and profound search, I found the gushing source in my little garden… Thus it seems to me that the individual is bound to all his dead ancestors by the efforts and sacrifices of individuals in the past.” (p. 11) Barrès, Maurice, 1862-1923. Scènes Et Doctrines Du Nationalisme. Paris: Émile-Paul, 1902. 
+</blockquote>
+<p>We focused a great deal on Barres, and this is for good reason: Barres takes Hegel and plants us into a nationalism and sense of history which follows by the <i>Nation</i> into the <i>Nation</i>— to him, the nebulous of France as an <i>ought-to-be</i>, and as <i>how-it-was</i>. Barres’ sensibilities were no obscure ideas to the French nationalists of the twentieth century, and he was a strong ideological undercurrent of his contemporary thinkers such as Charles Maurras, who later would be a significant figure of the <i>Nouvelle Droite</i>. The <i>Nouvelle Droite</i>, would become the fountain source of all the Far Right since then, and its ideology survives and thrives in the fringes of radicalism on the Right, the extremes, the Far. Though Hegel as a source of ideology is no longer praised nor considered, Hegel was integral to the development of the very particular doctrines of the Far Right, and Fascism. 
+</p>
+<p>I will finish off the marginalia with Barres’ notes on Philosophy, 
+</p>
+          </div>
+          <figcaption class="caption">Freight.</figcaption>
+        </article>
+
+        <!-- Marginalia as footnotes with quiet data timeline -->
+        <section class="folio">
+          <div class="kicker">Marginalia</div>
+          <div class="marginalia">
+               <div class="timeline-spine">
+            </div>
+            <div>
+              <section class="footnotes">
+              </section>
+              <section class="references">
+                <blockquote>“He could not have directed or annulled the conclusions of the arguments which he invented. A principle is often destined for a mysterious future.” (p. 14) Barrès, Maurice. De Hegel Aux Cantines Du Nord. E. Sansot et Cie , 1904. </blockquote>
+                <p><strong>Highlighted Readings:</strong></p>
+                <p>Barrès, Maurice. <em>De Hegel Aux Cantines Du Nord</em>. E. Sansot et Cie, 1904.</p>
+<p>Barrès, Maurice. <em>Scènes Et Doctrines Du Nationalisme</em>. Paris: Émile-Paul, 1902.</p>
+<p>Hegel, Georg Wilhelm Friedrich, 1770–1831, and John Sibree. <em>Lectures On the Philosophy of History</em>. London: G. Bell and Sons, 1881.</p>
+<p>Hegel, Georg Wilhelm Friedrich, 1770–1831, and Samuel Walters Dyde. <em>Hegel's Philosophy of Right</em>. London: G. Bell and Sons, 1896.</p>
+<p>Marx, Karl. <em>Grundrisse: Foundations of the Critique of Political Economy</em>. Penguin Books, 1973.</p>
+<p>McClelland, J. S., and John Frears. <em>The French Right: (From De Maistre to Maurras)</em>. Cape, 1970.</p>
+<p>Sayers, Sean. “Marx and Teleology.” <em>Science &amp; Society: A Journal of Marxist Thought and Analysis</em>, vol. 83, no. 1, Jan. 2019, pp. 37–63. <a href="https://doi.org/10.1521/siso.2019.83.1.37">https://doi.org/10.1521/siso.2019.83.1.37</a></p>
+
+              </section>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <footer class="foot">Autumn's 2025, and Continental's Haller5.</footer>
+    </div>
+  </div>
+
+  <style>.visually-hidden{position:absolute!important;height:1px;width:1px;overflow:hidden;clip:rect(1px,1px,1px,1px);white-space:nowrap}</style>
+</body>
+</html>
