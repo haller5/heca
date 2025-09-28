@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>The Continental Review — Lateral Broadsheet</title>
+  <meta name="description" content="A lateral broadsheet layout with marginalia as footnotes and a quiet‑data timeline in a mineral‑toned dark palette." />
+  <style>
+    :root {
+      --bg: #181818;
+      --ink: #ECEAE5;         /* primary reading text */
+      --muted: #B5B5B5;       /* secondary grayscale */
+      --rule: #3A3A3A;        /* hairlines */
+      --accent: #526C8E;      /* aged indigo: headings/links */
+      --secondary: #8C735A;   /* faded bronze: descriptions/bylines */
+      --timeline: #5C6E66;    /* ash‑green: nav/wbuttons/timeline */
+
+      --font-serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+      --font-sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+
+      --lh: 1.7;
+      --gutter: clamp(16px, 2.5vw, 28px);
+      --folio: clamp(580px, 60vw, 760px);
+      --narrow-folio: clamp(400px, 42vw, 520px);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin:0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font-serif);
+      line-height: var(--lh);
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden; /* guard against stray horizontal scroll on mobile */
+    }
+
+    /* Links & interactive accents */
+    a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+    a:hover { text-decoration-thickness: 2px; }
+
+    /* Layout */
+    .shell { display: grid; grid-template-columns: 84px 1fr; min-height: 100dvh; }
+
+    .rail {
+      border-right: 1px solid var(--rule);
+      display: grid; grid-template-rows: auto 1fr auto; align-items: start;
+      position: sticky; top: 0; height: 100dvh;
+      background: linear-gradient(#202020, transparent);
+    }
+    .brand {
+      writing-mode: vertical-rl; text-orientation: mixed; transform: rotate(180deg);
+      letter-spacing: .08em; font-variant-caps: all-small-caps; font-weight: 700;
+      font-size: clamp(.95rem, 2.3vw, 1.15rem);
+      padding: var(--gutter) .5rem; text-align: center; color: var(--accent);
+    }
+    .vnav { writing-mode: vertical-rl; text-orientation: mixed; transform: rotate(180deg);
+      display:flex; gap:1.1rem; padding:.75rem .5rem; align-items:center; justify-content:center;
+      border-top:1px solid var(--rule); border-bottom:1px solid var(--rule); }
+    .vnav a { color: var(--timeline); text-decoration: none; font-family: var(--font-sans);
+      font-variant-caps: all-small-caps; letter-spacing:.08em; font-size:.86rem; }
+    .vnav a:hover { color: var(--accent); text-decoration: underline; }
+    .folio-no { writing-mode: vertical-rl; transform: rotate(180deg); color: var(--secondary);
+      font-family: var(--font-sans); font-size:.8rem; padding:.75rem .5rem var(--gutter); border-top:1px solid var(--rule); }
+
+    .head { border-bottom:1px solid var(--rule); padding:.5rem var(--gutter); display:flex; align-items:center; gap:.8rem;
+      position: sticky; top:0; background: var(--bg); z-index:5; }
+    .dateline { font-variant-caps: all-small-caps; letter-spacing:.08em; color: var(--secondary);
+      font-family: var(--font-sans); font-size:.82rem; }
+    .section-kicker { color: var(--accent); font-family: var(--font-sans); font-variant-caps: all-small-caps; letter-spacing:.08em; margin-left:auto; }
+
+    .lateral { display:grid; grid-auto-flow: column; grid-auto-columns: var(--folio); gap: var(--gutter);
+      padding: var(--gutter); overflow-x:auto; overflow-y:hidden; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
+    .folio { border:1px solid var(--rule); padding: clamp(16px, 2vw, 22px);
+      display:grid; grid-template-rows:auto 1fr auto; gap:.75rem; background: linear-gradient(#1d1d1d, #181818); scroll-snap-align:start; }
+    .narrow { grid-auto-columns: var(--narrow-folio); }
+
+    /* Palette-aware typography */
+    .kicker { font-variant-caps: all-small-caps; letter-spacing:.08em; color: var(--accent); font-family: var(--font-sans); font-size:.92rem; }
+    h1, h2, h3 { margin:.1rem 0 .35rem; line-height:1.12; text-wrap: balance; color: var(--accent); }
+    h1 { font-size: clamp(1.6rem, 3.6vw, 2.6rem); }
+    h2 { font-size: clamp(1.25rem, 2.2vw, 1.55rem); }
+    .dek, .byline, .caption { color: var(--secondary); font-family: var(--font-sans); }
+    .dek { max-width: 60ch; }
+
+    /* Reading text remains high-contrast */
+    .prose { column-width: 33ch; column-gap: 2.2rem; column-rule: 1px solid var(--rule); max-width: 100%; color: var(--ink); }
+    .prose p { margin: 0 0 1.05em; }
+    .prose p:first-of-type::first-letter { float:left; font-size:3.2rem; line-height:.85; padding-right:.18rem; padding-top:.2rem; font-weight:600; color: var(--ink); }
+    .pull { break-inside: avoid; border-left:3px solid var(--rule); padding:.6rem .9rem; font-style:italic; color: var(--muted); margin:.8rem 0; }
+
+    .media { aspect-ratio: 16/9; border:1px solid var(--rule); display:grid; place-items:center; margin:.6rem 0; }
+    .media svg { width:26%; opacity:.5; }
+
+    /* Marginalia as footnotes with quiet data timeline */
+    .marginalia { display:grid; grid-template-columns:32px 1fr; gap:1rem; }
+    .timeline-spine { border-left:1px solid var(--secondary); display:grid; align-content:start; padding-top:.5rem; gap:1.2rem; }
+    .timeline-spine div { width:12px; height:12px; border-radius:50%; background: var(--timeline); margin-left:-6px; cursor:pointer; position:relative; }
+    .timeline-spine div:hover::after { content: attr(data-note); position:absolute; left:18px; top:0; background:#202020; color: var(--ink); font-size:.8rem; padding:.3rem .5rem; border:1px solid var(--rule); white-space:nowrap; }
+
+    .footnotes { display:grid; gap:.7rem; font-size:.95rem; color: var(--ink); }
+    .footnotes p { margin:0; }
+    .footnotes p::before { content: counter(fn) ". "; counter-increment: fn; color: var(--secondary); font-feature-settings: "lnum" 1; }
+    .footnotes { counter-reset: fn; }
+
+    .references { border-top:1px solid var(--rule); margin-top:1rem; padding-top:1rem; font-size:.9rem; color: var(--muted); display:grid; gap:.7rem; }
+    .references blockquote { margin:0; font-style:italic; color: var(--ink); border-left:3px solid var(--secondary); padding-left:.7rem; }
+
+    .foot { border-top:1px solid var(--rule); padding:.9rem var(--gutter); color: var(--secondary); font-family: var(--font-sans); }
+
+    /* Mobile refinement */
+    @media (max-width: 900px) {
+      .shell { grid-template-columns: 1fr; }
+      .rail { position: static; height: auto; }
+      .brand, .vnav, .folio-no { writing-mode: horizontal-tb; transform:none; display:flex; gap:.9rem; justify-content:center; }
+      .vnav { flex-wrap: wrap; }
+      .lateral { display:grid; grid-auto-flow: row; grid-auto-rows:auto; overflow: visible; padding: clamp(12px, 4vw, 20px); gap: clamp(12px, 3.5vw, 18px); }
+      .folio { scroll-snap-align: unset; padding: clamp(14px, 3.5vw, 20px); }
+      h1 { font-size: clamp(1.35rem, 6vw, 2rem); }
+      h2 { font-size: clamp(1.1rem, 4.8vw, 1.4rem); }
+      .prose { column-width: auto; column-count: 1; column-rule: none; }
+      .marginalia { grid-template-columns: 1fr; }
+      .timeline-spine { display: none; } /* optional; keeps mobile clean */
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside class="rail">
+      <div class="brand">continental's Haller5</div>
+      <nav class="vnav">
+                  <a href="index1.html">Index</a>
+        <a href="essay.html">Letters</a>
+        <a href="archive.html">Further Reading</a>
+        <a href="about.html">About</a>
+        <a href="#"></a>
+        <a href="#"></a>
+        <a href="#"></a>
+        <a href="#"></a>
+      </nav>
+      <div class="folio-no">No. 01 • Sept 27, 2025</div>
+    </aside>
+
+    <div>
+      <header class="head">
+        <div class="dateline">Autumn 2025's FOLIO</div>
+        <div class="section-kicker">Marginalia Edition</div>
+      </header>
+
+      <section class="lateral">
+        <!-- Lead essay -->
+        <article class="folio">
+          <div>
+            <div class="kicker">Essay • Anthropology • Ethology • Ethics</div>
+            <h1>Ethics and Ethology; Morality as Communicative Mechanisms</h1>
+            <p class="dek">no description.</p>
+            <p class="byline">By <strong>Haller Freight</strong> • Haller5</p>
+            <figure class="media">
+              <svg viewBox="0 0 100 60" role="img" aria-labelledby="phA"><title id="phA">Lead image</title><rect x="1" y="1" width="98" height="58" fill="none" stroke="currentColor" stroke-width=".6" opacity=".35"/><path d="M3 42 L28 22 L53 34 L74 20 L97 42" fill="none" stroke="currentColor" stroke-width=".6" opacity=".35"/></svg>
+            </figure>
+          </div>
+          <div class="prose">
+            <p>However unintuitive or intuitive, could there not be some sensibility in suggesting that my ethics are my primitive communication? I can only toss the idea around, though even from a somewhat anthropological standard, such a suggestion appears most satisfactory... Whatever the case, my nose is upturned at the foul notion that one's ethic make-up is objectively imposed or informed. To even entertain the idea for mere moments erodes one's sense of what's real. Even if one were to metaphysically entertain, logically, that there may be some perennial values, in some grotesque, almost Evolian, manner, then what so, then? Not to mention such a concept would be, by any definition of something simiilarly noumenic, beyond any measurable grasp filtered through the bodily senses. For this will they resort to their logical systems, their Kantian dispositoins, their uniquely Greek and idealist notions of accessing Forms. And for this will they once more fail to catch anything-- do they not learn? "Morality is mere sign language." ANy rigorous study of human behaviour must begin by defining itself against the relative animal behaviour. We ask, how and where does morality and ethical gesture find expression in the animal? With haste will a few suggest morality is a uniquely human behvaiour, but these cannot be entertained so long as one asserts that man is biological. Whether socially developed or informed through Platonic forms, the first assertion is that morality does exist. It has real impacts, real expressions, and real gestures. Whether systematised or not, all forms of social life exhibit some form of behaviours which signal exclusion or inclusion. And, really, have we not already spoiled the answer with out definition? In any case, if the question is no longer, if morality exists, or whether morality is informed by perennial forms, but rather why it exists, then we may ask ourselves two questions: what expressions does it purpose, and why does it purpose specifically those behaviours. What is the point at having these boundaries of behaviours. Here we don't meanderingly ponder a philosophical point, but get on the ground and understand what exactly is going on at both a micro and macro scale when implicit moral frameworks are deployed on certain types of behaviours, what it results in, and what it may do to the individual and larger social population. In other words, how is morality deployed, and why is it deployed at all? Hopefully its more than evident that this question is not at all difficult to answer. But to get into specific fundamentals, it is perhaps best to observe more socially primitive animals which exhibit moral schemas. </p>
+            
+          </div>
+          <figcaption class="caption">Freight.</figcaption>
+        </article>
+
+        <!-- Marginalia as footnotes with quiet data timeline -->
+        <section class="folio">
+          <div class="kicker">Marginalia</div>
+          <div class="marginalia">
+               <div class="timeline-spine">
+            </div>
+            <div>
+              <section class="footnotes">
+              </section>
+              <section class="references">
+
+
+              </section>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <footer class="foot">Autumn's 2025, and Continental's Haller5.</footer>
+    </div>
+  </div>
+
+  <style>.visually-hidden{position:absolute!important;height:1px;width:1px;overflow:hidden;clip:rect(1px,1px,1px,1px);white-space:nowrap}</style>
+</body>
+</html>

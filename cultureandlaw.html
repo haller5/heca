@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>The Continental Review — Lateral Broadsheet</title>
+  <meta name="description" content="A lateral broadsheet layout with marginalia as footnotes and a quiet‑data timeline in a mineral‑toned dark palette." />
+  <style>
+    :root {
+      --bg: #181818;
+      --ink: #ECEAE5;         /* primary reading text */
+      --muted: #B5B5B5;       /* secondary grayscale */
+      --rule: #3A3A3A;        /* hairlines */
+      --accent: #526C8E;      /* aged indigo: headings/links */
+      --secondary: #8C735A;   /* faded bronze: descriptions/bylines */
+      --timeline: #5C6E66;    /* ash‑green: nav/wbuttons/timeline */
+
+      --font-serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+      --font-sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+
+      --lh: 1.7;
+      --gutter: clamp(16px, 2.5vw, 28px);
+      --folio: clamp(580px, 60vw, 760px);
+      --narrow-folio: clamp(400px, 42vw, 520px);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin:0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font-serif);
+      line-height: var(--lh);
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden; /* guard against stray horizontal scroll on mobile */
+    }
+
+    /* Links & interactive accents */
+    a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+    a:hover { text-decoration-thickness: 2px; }
+
+    /* Layout */
+    .shell { display: grid; grid-template-columns: 84px 1fr; min-height: 100dvh; }
+
+    .rail {
+      border-right: 1px solid var(--rule);
+      display: grid; grid-template-rows: auto 1fr auto; align-items: start;
+      position: sticky; top: 0; height: 100dvh;
+      background: linear-gradient(#202020, transparent);
+    }
+    .brand {
+      writing-mode: vertical-rl; text-orientation: mixed; transform: rotate(180deg);
+      letter-spacing: .08em; font-variant-caps: all-small-caps; font-weight: 700;
+      font-size: clamp(.95rem, 2.3vw, 1.15rem);
+      padding: var(--gutter) .5rem; text-align: center; color: var(--accent);
+    }
+    .vnav { writing-mode: vertical-rl; text-orientation: mixed; transform: rotate(180deg);
+      display:flex; gap:1.1rem; padding:.75rem .5rem; align-items:center; justify-content:center;
+      border-top:1px solid var(--rule); border-bottom:1px solid var(--rule); }
+    .vnav a { color: var(--timeline); text-decoration: none; font-family: var(--font-sans);
+      font-variant-caps: all-small-caps; letter-spacing:.08em; font-size:.86rem; }
+    .vnav a:hover { color: var(--accent); text-decoration: underline; }
+    .folio-no { writing-mode: vertical-rl; transform: rotate(180deg); color: var(--secondary);
+      font-family: var(--font-sans); font-size:.8rem; padding:.75rem .5rem var(--gutter); border-top:1px solid var(--rule); }
+
+    .head { border-bottom:1px solid var(--rule); padding:.5rem var(--gutter); display:flex; align-items:center; gap:.8rem;
+      position: sticky; top:0; background: var(--bg); z-index:5; }
+    .dateline { font-variant-caps: all-small-caps; letter-spacing:.08em; color: var(--secondary);
+      font-family: var(--font-sans); font-size:.82rem; }
+    .section-kicker { color: var(--accent); font-family: var(--font-sans); font-variant-caps: all-small-caps; letter-spacing:.08em; margin-left:auto; }
+
+    .lateral { display:grid; grid-auto-flow: column; grid-auto-columns: var(--folio); gap: var(--gutter);
+      padding: var(--gutter); overflow-x:auto; overflow-y:hidden; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
+    .folio { border:1px solid var(--rule); padding: clamp(16px, 2vw, 22px);
+      display:grid; grid-template-rows:auto 1fr auto; gap:.75rem; background: linear-gradient(#1d1d1d, #181818); scroll-snap-align:start; }
+    .narrow { grid-auto-columns: var(--narrow-folio); }
+
+    /* Palette-aware typography */
+    .kicker { font-variant-caps: all-small-caps; letter-spacing:.08em; color: var(--accent); font-family: var(--font-sans); font-size:.92rem; }
+    h1, h2, h3 { margin:.1rem 0 .35rem; line-height:1.12; text-wrap: balance; color: var(--accent); }
+    h1 { font-size: clamp(1.6rem, 3.6vw, 2.6rem); }
+    h2 { font-size: clamp(1.25rem, 2.2vw, 1.55rem); }
+    .dek, .byline, .caption { color: var(--secondary); font-family: var(--font-sans); }
+    .dek { max-width: 60ch; }
+
+    /* Reading text remains high-contrast */
+    .prose { column-width: 33ch; column-gap: 2.2rem; column-rule: 1px solid var(--rule); max-width: 100%; color: var(--ink); }
+    .prose p { margin: 0 0 1.05em; }
+    .prose p:first-of-type::first-letter { float:left; font-size:3.2rem; line-height:.85; padding-right:.18rem; padding-top:.2rem; font-weight:600; color: var(--ink); }
+    .pull { break-inside: avoid; border-left:3px solid var(--rule); padding:.6rem .9rem; font-style:italic; color: var(--muted); margin:.8rem 0; }
+
+    .media { aspect-ratio: 16/9; border:1px solid var(--rule); display:grid; place-items:center; margin:.6rem 0; }
+    .media svg { width:26%; opacity:.5; }
+
+    /* Marginalia as footnotes with quiet data timeline */
+    .marginalia { display:grid; grid-template-columns:32px 1fr; gap:1rem; }
+    .timeline-spine { border-left:1px solid var(--secondary); display:grid; align-content:start; padding-top:.5rem; gap:1.2rem; }
+    .timeline-spine div { width:12px; height:12px; border-radius:50%; background: var(--timeline); margin-left:-6px; cursor:pointer; position:relative; }
+    .timeline-spine div:hover::after { content: attr(data-note); position:absolute; left:18px; top:0; background:#202020; color: var(--ink); font-size:.8rem; padding:.3rem .5rem; border:1px solid var(--rule); white-space:nowrap; }
+
+    .footnotes { display:grid; gap:.7rem; font-size:.95rem; color: var(--ink); }
+    .footnotes p { margin:0; }
+    .footnotes p::before { content: counter(fn) ". "; counter-increment: fn; color: var(--secondary); font-feature-settings: "lnum" 1; }
+    .footnotes { counter-reset: fn; }
+
+    .references { border-top:1px solid var(--rule); margin-top:1rem; padding-top:1rem; font-size:.9rem; color: var(--muted); display:grid; gap:.7rem; }
+    .references blockquote { margin:0; font-style:italic; color: var(--ink); border-left:3px solid var(--secondary); padding-left:.7rem; }
+
+    .foot { border-top:1px solid var(--rule); padding:.9rem var(--gutter); color: var(--secondary); font-family: var(--font-sans); }
+
+    /* Mobile refinement */
+    @media (max-width: 900px) {
+      .shell { grid-template-columns: 1fr; }
+      .rail { position: static; height: auto; }
+      .brand, .vnav, .folio-no { writing-mode: horizontal-tb; transform:none; display:flex; gap:.9rem; justify-content:center; }
+      .vnav { flex-wrap: wrap; }
+      .lateral { display:grid; grid-auto-flow: row; grid-auto-rows:auto; overflow: visible; padding: clamp(12px, 4vw, 20px); gap: clamp(12px, 3.5vw, 18px); }
+      .folio { scroll-snap-align: unset; padding: clamp(14px, 3.5vw, 20px); }
+      h1 { font-size: clamp(1.35rem, 6vw, 2rem); }
+      h2 { font-size: clamp(1.1rem, 4.8vw, 1.4rem); }
+      .prose { column-width: auto; column-count: 1; column-rule: none; }
+      .marginalia { grid-template-columns: 1fr; }
+      .timeline-spine { display: none; } /* optional; keeps mobile clean */
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside class="rail">
+      <div class="brand">continental's Haller5</div>
+      <nav class="vnav">
+                  <a href="index1.html">Index</a>
+        <a href="essay.html">Letters</a>
+        <a href="archive.html">Further Reading</a>
+        <a href="about.html">About</a>
+        <a href="#"></a>
+        <a href="#"></a>
+        <a href="#"></a>
+        <a href="#"></a>
+      </nav>
+      <div class="folio-no">No. 01 • Sept 27, 2025</div>
+    </aside>
+
+    <div>
+      <header class="head">
+        <div class="dateline">Autumn 2025's FOLIO</div>
+        <div class="section-kicker">Marginalia Edition</div>
+      </header>
+
+      <section class="lateral">
+        <!-- Lead essay -->
+        <article class="folio">
+          <div>
+            <div class="kicker">Essay • Anthropology • Legal Theory • Culture</div>
+            <h1>Legal Theories of Decisionist Institutionalism and the Invention of Culture</h1>
+            <p class="dek">no description.</p>
+            <p class="byline">By <strong>Haller Freight</strong> • Haller5</p>
+            <figure class="media">
+              <svg viewBox="0 0 100 60" role="img" aria-labelledby="phA"><title id="phA">Lead image</title><rect x="1" y="1" width="98" height="58" fill="none" stroke="currentColor" stroke-width=".6" opacity=".35"/><path d="M3 42 L28 22 L53 34 L74 20 L97 42" fill="none" stroke="currentColor" stroke-width=".6" opacity=".35"/></svg>
+            </figure>
+          </div>
+          <div class="prose">
+            <p>In some manner or another, objective understandings of ethics have prevailed-- and really, objective understandings of a myriad of fields have prevailed despite the immense literature and research demonstrating not only the opposite (that is, that there is no basis for objective understandings of genres such as ethics, aesthetics, etc), but rather that the genres in themselves aren't eternal genres, nor even loosely set subspecies of things-in-themselves. Ethics, aesthetics, faith, and a great deal more are all in constant recursive dialogue, and have no real forms, but are rather constantly negotiated, constructed, and made themselves through institutions like the law and demonstrable social orders. </p>
+            <p>Carl Schmitt, while somewhat obscured for his other ideological affiliations, understood law and social order in a highly insightful and modern way in his latter years, that is in the late 1930s. Similar to Asad's section on Ritual in the Genealogy of Religion, Schmitt demonstrates law as a mechanism whereby lawful behaviours and habits are established in accordance with, and not against, already natural and present cultural and ethical dispositions within a population. Likewise, law plays not only the role of making the already present ethical dispositions distinct and acknowledged in a systemic manner, but law too acts as a cutting tool, whereby it simultaneously negotiates between systematising the prevalent culture and excluding the "outsider" culture. Generally this exclusionary tool functions under the premise of homogeneity and power usurpation-- in other words, the institions, or law-bearers, officials of law, decide which behaviours are to be labeled as counter-homogeneous, or which threaten the homogeneity of the primary population. In fact, this is touched upon in a religious context by Ananda in Inventing Religion in Japan. For our purposes, Ananda's terminology is of particular importance: Hierarchical Exclusion and Exclusive Similarity. Notably, not all populations are precisely homogenous, and the function of law is to, as described, mark out the definite boundaries of actual habits and behaviours, which has the simultanous effect of insitutionally protecting the majority and creating the "heretical" mode of behaviour. In fact, Schmitt frames this in a particularly interesting manner. Law, rather than being actualised in the pursuit of systematising the actual behaviours of the majority, rather the supremacy of the majority is estbalished against the exclusion of the minority. A subtle distinction, but put more illustratively, the role of law-bearers in early instituional practices is to mark out the "heretical mode" of living, rather than being concerned with strictly defining the "proper mode" of living.</p>
+            <p>How law-bearers deal with these pockets of difference in cultural and ethical dispositoins within particularly large populations is a highly complex and uniquely transformative one, as noted by Ananda. Both parts have similar functions but function in fundamentally different manners. Exclusive similarity categorises acceptable behaviours in relation and simliarity to oneself. It is a mechanism by which one population makes sense of differences with another population by assimilating the other population's cultural frameworks into its own, often as a subset of its own, or a variant expression of its own. In other words, it understands the other population as a slightly crude variant of its own culture, and understands the differences as symtpoms of this crudeness, but no more than that. In some cases, the existence of differences can serve to further promote the supremacy of the observing culture, as the observed culture is perceived to be proof of the universality (albeit with its unique quirks) of the observing culture's own frameworks. An example of this was how, as Ananda writes, the Buddhists in Japan would categorise other religions as expressions of the Buddha, only in their cruder forms, with cruder (unauthentic/ culturally relative) names. This cultural relativistic quirk promoted the universality of buddhism. In this manner, other less dominant cultures are assimilated into the observing culture.</p>
+            <p>However, in relation to the exclusion of other cultures from law, Ananda provides the framework of Hierarhical Exclusion. With this, the observing culture perceives the observed culture as similar, but ultimately different (in contrast to the previous framework where the culture is perceived as similar, but ultimately different). Just as the previous framework seeks to negotiate and make sense of the differences to establish a sense of similarity, hierarchical exclusion makes sense of similarities and uses them to toss the culture aside as a vulgar and inauthentic perversion of the dominant culture. As "heretical." In this sense, paradoxically, a culture is heretical insofar as it is perceived as similar enough that it is established as a perversion of the dominant culture. While these work to understand religio-cultural exchanges, we can nonetheless remove any labeling of "religion" due to the total redundancy of the term, and establish these two frameworks as more broadly socio-cultural exchanges of assimilation and exclusion.</p>
+            
+          </div>
+          <figcaption class="caption">Freight.</figcaption>
+        </article>
+
+        <!-- Marginalia as footnotes with quiet data timeline -->
+        <section class="folio">
+          <div class="kicker">Marginalia</div>
+          <div class="marginalia">
+               <div class="timeline-spine">
+            </div>
+            <div>
+              <section class="footnotes">
+              </section>
+              <section class="references">
+
+
+              </section>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <footer class="foot">Autumn's 2025, and Continental's Haller5.</footer>
+    </div>
+  </div>
+
+  <style>.visually-hidden{position:absolute!important;height:1px;width:1px;overflow:hidden;clip:rect(1px,1px,1px,1px);white-space:nowrap}</style>
+</body>
+</html>
